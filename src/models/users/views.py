@@ -1,6 +1,7 @@
 from flask import Blueprint, request, session, url_for, render_template
 from werkzeug.utils import redirect
 
+from src.models.alerts.alert import Alert
 from src.models.users.user import User
 import src.models.users.errors as UserErrors
 
@@ -41,7 +42,9 @@ def register_user():
 
 @user_blueprint.route('/alerts')
 def user_alerts():
-    return 'This is the alerts page.'
+    user = User.find_by_email(session['email'])
+    alerts = user.get_alerts()
+    return render_template('users/alerts.html', alerts=alerts)
 
 
 @user_blueprint.route('/logout')
